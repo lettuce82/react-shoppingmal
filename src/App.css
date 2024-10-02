@@ -1,3 +1,10 @@
+.main-bg {
+  height: 300px;
+  background-image: url('./KakaoTalk_20240930_170940755.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
 .App {
   text-align: center;
 }
