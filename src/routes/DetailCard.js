@@ -20,22 +20,34 @@ let YellowBtn = styled.button`
   padding : 10px;
 `
 
-let NewBtn = styled.button(YellowBtn)`
+let NewBtn = styled(YellowBtn)`
 
 `
 
-let [sale, setSale] = useState(true);
-
 function DetailCard(props) {
 
-  useEffect(()=> {
-    setTimeout(()=>{ setSale(!sale) }, 1000)
-  })
-
   let [count, setCount] = useState(0);
-
   let {id} = useParams();
   const shoe = props.shoes.find(s=>s.id == id);
+  let [sale, setSale] = useState(true);
+  let [inputValue, setInputValue] = useState('');
+
+  useEffect(()=> {
+    let timer = setTimeout(()=>{ setSale(false) }, 2000)
+    
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [])
+
+  useEffect(()=>{
+
+    if (isNaN(inputValue) && inputValue !== '') {
+      alert('숫자만 입력해 주세요!');
+      setInputValue('');
+    }
+
+  }, [inputValue])
 
     return (
       <div className='container'>
@@ -49,6 +61,7 @@ function DetailCard(props) {
           </div>
         </div>
         <div>
+          <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} placeholder="숫자를 입력하세요."></input>
           <h4>{shoe.title} </h4>
           <p> {shoe.content} </p>
           <p> {shoe.price}원 </p>

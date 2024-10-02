@@ -7,18 +7,19 @@ import DetailCard from './routes/DetailCard.js';
 import { useState } from 'react';
 import { data } from './data.js';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
+import axios from 'axios';
 
 function App() {
 
   let [shoes, setShoes] = useState(data)
   let navigate = useNavigate();
-
   const sortShoesByTitle = () => {
     const sortedShoes = [...shoes].sort((a, b) => 
       a.title.localeCompare(b.title, 'en-US')
     );
     setShoes(sortedShoes);
   };
+  let [moreShoes, setMore] = useState(data);
 
   function Card(props) {
     return (
@@ -73,14 +74,26 @@ function App() {
               <Container>
                 <Row>
                   {shoes.map((shoe, index) => (
-                    <Card shoe = {shoe}></Card>
+                    <Col xs={12} md={4} className="mb-4">
+                      <Card shoe={shoe} />
+                    </Col>
                   ))}
                 </Row>
               </Container>
+              <button onClick={()=> {
+                axios.get('https://codingapple1.github.io/shop/data2.json')
+                .then((res)=>{ 
+                  setShoes((shoes) => [...shoes, ...res.data]);
+                })
+                .catch(()=>{
+                  console.log('실패함')
+                })
+              }}>버튼</button>
           </>
-          }/>
-        <Route path='/detail/:id' element={<DetailCard shoes = {shoes}/>}/>
+          }
+        />
         
+        <Route path='/detail/:id' element={<DetailCard shoes = {shoes}/>}/>
         <Route path='/about' element={<About/>}>
           <Route path='member' element={<div>멤버임</div>}></Route>
         </Route>
