@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import Nav from 'react-bootstrap/Nav';
+import useFadeEffect from "../effect/useFadeEffect";
 
 // class Detail2 extends React.Component {
 //   componentDidMount(){
@@ -24,6 +26,7 @@ let NewBtn = styled(YellowBtn)`
 
 `
 
+
 function DetailCard(props) {
 
   let [count, setCount] = useState(0);
@@ -31,6 +34,8 @@ function DetailCard(props) {
   const shoe = props.shoes.find(s=>s.id == id);
   let [sale, setSale] = useState(true);
   let [inputValue, setInputValue] = useState('');
+  let [탭, 탭변경] = useState(0);
+  let fade = useFadeEffect(0);
 
   useEffect(()=> {
     let timer = setTimeout(()=>{ setSale(false) }, 2000)
@@ -50,7 +55,7 @@ function DetailCard(props) {
   }, [inputValue])
 
     return (
-      <div className='container'>
+      <div className={`container start ${fade}`}>
         {
           sale ? <div className="alert alert-warning">2초이내 구매시 할인</div> : <></>
         }
@@ -67,8 +72,37 @@ function DetailCard(props) {
           <p> {shoe.price}원 </p>
           <button className='btn btn-danger'>주문하기</button>
         </div>
+
+        <Nav variant="tabs" defaultActiveKey={"link0"}>
+          <Nav.Item>
+            <Nav.Link eventKey="link0" onClick={()=>{탭변경(0)}}>Link0</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link eventKey="link1" onClick={()=>{탭변경(1)}}>Link1</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link eventKey="link2" onClick={()=>{탭변경(2)}}>Link2</Nav.Link>
+          </Nav.Item>
+        </Nav>
+        <TabContent 탭 = {탭}/>
+
       </div>
     )
   }
 
+  function TabContent({탭}) {
+    // if(탭 == 0) {
+    //   return <div> 내용 0 </div>
+    // } else if(탭 == 1) {
+    //   return <div> 내용 1 </div>
+    // } else if(탭 == 2) {
+    //   return <div> 내용 2 </div>
+    // }
+    let fade = useFadeEffect(탭);
+    return <div className={`start ${fade}`}>
+      {[<div> 내용 0 </div>, <div> 내용 1 </div>, <div> 내용 2 </div>][탭]}
+    </div>
+  }
+
   export default DetailCard;
+  
