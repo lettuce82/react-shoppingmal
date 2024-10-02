@@ -19,7 +19,8 @@ function App() {
     );
     setShoes(sortedShoes);
   };
-  let [moreShoes, setMore] = useState(data);
+  let [page, setPage] = useState(2);
+  let [loading, setLoading] = useState(false);
 
   function Card(props) {
     return (
@@ -80,15 +81,27 @@ function App() {
                   ))}
                 </Row>
               </Container>
-              <button onClick={()=> {
-                axios.get('https://codingapple1.github.io/shop/data2.json')
+              <button onClick={()=> { 
+                setLoading(true);
+                axios.get(`https://codingapple1.github.io/shop/data${page}.json`)
                 .then((res)=>{ 
                   setShoes((shoes) => [...shoes, ...res.data]);
+                  setPage((page) => page + 1);
                 })
-                .catch(()=>{
-                  console.log('실패함')
+                .catch((error) => {
+                  console.log('데이터 로딩 실패:', error);
+                  if (page >= 3) {
+                    alert("더 이상 상품이 없습니다!");
+                  } else {
+                    alert("데이터를 불러오는데 실패했습니다. 다시 시도해주세요.");
+                  }
                 })
-              }}>버튼</button>
+                .finally(() => {
+                  setLoading(false);
+                });
+              }} disabled={loading}>
+              {loading ? '로딩중...' : '더보기'}
+              </button>
           </>
           }
         />
