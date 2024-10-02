@@ -99,6 +99,12 @@ function App() {
                 .finally(() => {
                   setLoading(false);
                 });
+
+                Promise.all([axios.get('/url1'), axios.get('/url2')])
+                .then(()=>{
+
+                })
+                
               }} disabled={loading}>
               {loading ? '로딩중...' : '더보기'}
               </button>
