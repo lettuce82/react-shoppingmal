@@ -45,8 +45,10 @@ function DetailCard(props) {
   useEffect(() => {
     if (shoe) {
       let recentItems = JSON.parse(localStorage.getItem('recent') || '[]');
-      recentItems = recentItems.filter(item => item !== shoe.title);
+      // recentItems = recentItems.filter(item => item !== shoe.title);
       recentItems.unshift(shoe.title);
+      recentItems = new Set(recentItems);
+      recentItems = Array.from(recentItems)
       localStorage.setItem('recent', JSON.stringify(recentItems));
     }
   }, [shoe]);
