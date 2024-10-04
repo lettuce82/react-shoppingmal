@@ -11,6 +11,6 @@ export default configureStore({
     reducer: {
         user : user.reducer,
         stock : stock.reducer,
-        cartDetail : cartDetail.reducer
+        cartDetail : cartDetail.reducer,
     }
 })

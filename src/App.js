@@ -5,14 +5,19 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import DetailCard from './routes/DetailCard.js';
 import Cart from './routes/Cart.js';
-import { createContext, useState } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import { data } from './data.js';
-import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate, Outlet, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 export let Context1 = createContext()
 
 function App() {
+
+  let obj = {name : 'kim'}
+  localStorage.setItem('data', JSON.stringify(obj))
+  let 꺼낸거 = localStorage.getItem('data')
+  console.log(JSON.parse(꺼낸거).name)
 
   let [shoes, setShoes] = useState(data)
   let [재고] = useState([10, 11, 12])
@@ -26,14 +31,24 @@ function App() {
   };
   let [page, setPage] = useState(2);
   let [loading, setLoading] = useState(false);
+  
+  const [recentItems, setRecentItems] = useState([]);
+  const location = useLocation();
+
+  useEffect(() => {
+    const items = JSON.parse(localStorage.getItem('recent') || '[]');
+    setRecentItems(items);
+  }, [location]);
 
   function Card(props) {
     return (
-      <Col sm>
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbRkfc_UtgEOa6MOOC2FzZdY0sSPyx0ee9yQ&s"></img>
-        <h4>{props.shoe.title} </h4>
-        <p> {props.shoe.content} </p>
-      </Col>
+      <Nav.Link onClick={()=>{ navigate('/detail/' + props.shoe.id) }}>
+        <Col sm>
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbRkfc_UtgEOa6MOOC2FzZdY0sSPyx0ee9yQ&s"></img>
+          <h4>{props.shoe.title} </h4>
+          <p> {props.shoe.content} </p>
+        </Col>
+      </Nav.Link>
     )
   }
 
@@ -57,7 +72,6 @@ function App() {
 
   return (
     <div className="App">
-
       <Navbar bg="dark" data-bs-theme="dark">
         <Container>
           <Navbar.Brand  onClick={()=>{ navigate('/') }}>ShoeShop</Navbar.Brand>
@@ -78,6 +92,20 @@ function App() {
         <Route path='/' element={
           <>
             <div className='main-bg'  style={ {backgroundImage : 'url(' + bg + ')'}}></div>
+            <h4>최근 본 상품</h4>
+            <Container>
+                <Row>
+            {
+              recentItems.map((item, i) => (
+                <Col xs={12} md={4} className="mb-4">
+                  <Col sm>{item}</Col>
+                </Col>
+            ))
+            }
+            </Row>
+            </Container>
+
+            <h4>전체 상품보기</h4>
               <Container>
                 <Row>
                   {shoes.map((shoe, index) => (

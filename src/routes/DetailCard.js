@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Nav from 'react-bootstrap/Nav';
 import useFadeEffect from "../effect/useFadeEffect";
-import {Context1} from './../App.js'
+import { Context1 } from './../App.js'
 import { useDispatch } from "react-redux";
 import { addCart } from '../store/cartDetailSlice.js';
 
@@ -41,6 +41,15 @@ function DetailCard(props) {
   let [탭, 탭변경] = useState(0);
   let fade = useFadeEffect(0);
   let dispatch = useDispatch();
+
+  useEffect(() => {
+    if (shoe) {
+      let recentItems = JSON.parse(localStorage.getItem('recent') || '[]');
+      recentItems = recentItems.filter(item => item !== shoe.title);
+      recentItems.unshift(shoe.title);
+      localStorage.setItem('recent', JSON.stringify(recentItems));
+    }
+  }, [shoe]);
 
   useEffect(()=> {
     let timer = setTimeout(()=>{ setSale(false) }, 2000)
