@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Nav from 'react-bootstrap/Nav';
 import useFadeEffect from "../effect/useFadeEffect";
+import {Context1} from './../App.js'
+import { useDispatch } from "react-redux";
+import { addCart } from '../store/cartDetailSlice.js';
 
 // class Detail2 extends React.Component {
 //   componentDidMount(){
@@ -26,8 +29,9 @@ let NewBtn = styled(YellowBtn)`
 
 `
 
-
 function DetailCard(props) {
+
+  let {재고, shoes} = useContext(Context1)
 
   let [count, setCount] = useState(0);
   let {id} = useParams();
@@ -36,6 +40,7 @@ function DetailCard(props) {
   let [inputValue, setInputValue] = useState('');
   let [탭, 탭변경] = useState(0);
   let fade = useFadeEffect(0);
+  let dispatch = useDispatch();
 
   useEffect(()=> {
     let timer = setTimeout(()=>{ setSale(false) }, 2000)
@@ -70,7 +75,7 @@ function DetailCard(props) {
           <h4>{shoe.title} </h4>
           <p> {shoe.content} </p>
           <p> {shoe.price}원 </p>
-          <button className='btn btn-danger'>주문하기</button>
+          <button className='btn btn-danger' onClick={()=> {dispatch(addCart(shoe))}}>주문하기</button>
         </div>
 
         <Nav variant="tabs" defaultActiveKey={"link0"}>
@@ -99,8 +104,10 @@ function DetailCard(props) {
     //   return <div> 내용 2 </div>
     // }
     let fade = useFadeEffect(탭);
+    let {재고, shoes} = useContext(Context1)
+
     return <div className={`start ${fade}`}>
-      {[<div> 내용 0 </div>, <div> 내용 1 </div>, <div> 내용 2 </div>][탭]}
+      {[<div> {재고} </div>, <div> 내용 1 </div>, <div> 내용 2 </div>][탭]}
     </div>
   }
 
